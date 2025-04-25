@@ -93,62 +93,49 @@ function App() {
             </section>
 
             <section className="features-section">
-              <h2 className="section-title">Why Choose FreelChain</h2>
+              <div className="container">
+                <h2 className="section-title">Why Choose FreelChain</h2>
+                <div className="features-grid">
+                  <div className="feature-card">
+                    <div className="feature-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="icon">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0110 0v4"></path>
+                      </svg>
+                    </div>
+                    <h3>Secure Payments</h3>
+                    <p>Smart contracts automatically ensure funds are only released when work is completed to
+                      satisfaction, protecting both parties.</p>
+                  </div>
 
-              <div className="features-grid">
-                <div className="feature-card">
-                  <div className="feature-icon">🔒</div>
-                  <h3 className="feature-title">Secure Payments</h3>
-                  <p className="feature-description">
-                    Smart contracts ensure funds are only released when work is completed to satisfaction
-                  </p>
-                </div>
+                  <div className="feature-card">
+                    <div className="feature-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="icon">
+                        <path d="M12 1v22"></path>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                      </svg>
+                    </div>
+                    <h3>Low Fees</h3>
+                    <p>Save significantly on transaction costs with Solana's high-performance blockchain, making
+                      freelancing more profitable for everyone.</p>
+                  </div>
 
-                <div className="feature-card">
-                  <div className="feature-icon">💰</div>
-                  <h3 className="feature-title">Low Fees</h3>
-                  <p className="feature-description">
-                    Save on transaction costs with Solana's high-performance blockchain
-                  </p>
-                </div>
-
-                <div className="feature-card">
-                  <div className="feature-icon">🌎</div>
-                  <h3 className="feature-title">Global Marketplace</h3>
-                  <p className="feature-description">
-                    Connect with clients and freelancers from around the world with no intermediaries
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            <section className="token-info-section">
-              <div className="token-info-content">
-                <h2 className="token-title">FRL Token</h2>
-                <p className="token-description">
-                  FreelChain's native token powers our ecosystem, providing benefits like reduced fees,
-                  staking rewards, and governance rights
-                </p>
-
-                <button className="btn btn-primary token-btn">
-                  Explore Token Utility
-                </button>
-              </div>
-
-              <div className="token-stats">
-                <div className="token-stat">
-                  <h3 className="stat-value">100M</h3>
-                  <p className="stat-label">Total Supply</p>
-                </div>
-
-                <div className="token-stat">
-                  <h3 className="stat-value">5%</h3>
-                  <p className="stat-label">Fee Discount</p>
-                </div>
-
-                <div className="token-stat">
-                  <h3 className="stat-value">12%</h3>
-                  <p className="stat-label">Staking APY</p>
+                  <div className="feature-card">
+                    <div className="feature-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="icon">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path
+                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                      </svg>
+                    </div>
+                    <h3>Global Marketplace</h3>
+                    <p>Connect directly with clients and freelancers worldwide with no intermediaries, opening up
+                      unlimited opportunities for collaboration.</p>
+                  </div>
                 </div>
               </div>
             </section>
