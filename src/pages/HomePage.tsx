@@ -22,15 +22,15 @@ const HomePage: React.FC = () => {
 
                         <div className="hero-cta">
                             {connected ? (
-                                <Link to="/marketplace" className="btn btn-primary">
-                                    Explore Marketplace
+                                <Link to="/marketplace" className="btn btn-modern-primary">
+                                    <span className="btn-icon">🚀</span> Explore Marketplace
                                 </Link>
                             ) : (
-                                <WalletMultiButton className="btn wallet-btn" />
+                                <WalletMultiButton className="btn btn-modern-connect" />
                             )}
 
-                            <Link to="/tokens" className="btn btn-secondary">
-                                Learn About FRL Token
+                            <Link to="/tokens" className="btn btn-modern-secondary">
+                                <span className="btn-icon">💎</span> FRL Token Info
                             </Link>
                         </div>
                     </div>
@@ -48,6 +48,69 @@ const HomePage: React.FC = () => {
                 </div>
             </section>
 
+            {/* About Project Section - NEW */}
+            <section className="about-project-section">
+                <div className="container">
+                    <h2 className="section-title">About FreelChain</h2>
+
+                    <div className="about-project-content">
+                        <div className="about-project-text">
+                            <p className="about-paragraph">
+                                FreelChain is a decentralized freelance marketplace built on the Solana blockchain,
+                                designed to connect talented professionals with clients worldwide without intermediaries.
+                            </p>
+
+                            <p className="about-paragraph">
+                                Our platform leverages blockchain technology to ensure secure payments, lower fees, and
+                                transparent transactions. Smart contracts automatically enforce agreements between
+                                freelancers and clients, eliminating payment disputes and delays.
+                            </p>
+
+                            <p className="about-paragraph highlight">
+                                <strong>Mission:</strong> Empower freelancers and clients through decentralized technology,
+                                creating a global ecosystem where talent meets opportunity without borders or gatekeepers.
+                            </p>
+
+                            <div className="about-stats">
+                                <div className="about-stat">
+                                    <h4 className="stat-number">10,000+</h4>
+                                    <p className="stat-desc">Active Users</p>
+                                </div>
+                                <div className="about-stat">
+                                    <h4 className="stat-number">5,000+</h4>
+                                    <p className="stat-desc">Completed Projects</p>
+                                </div>
+                                <div className="about-stat">
+                                    <h4 className="stat-number">95%</h4>
+                                    <p className="stat-desc">Satisfaction Rate</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="about-project-image">
+                            <div className="tech-stack">
+                                <div className="tech-item">
+                                    <span className="tech-icon">⚡</span>
+                                    <span className="tech-name">Solana</span>
+                                </div>
+                                <div className="tech-item">
+                                    <span className="tech-icon">📝</span>
+                                    <span className="tech-name">Smart Contracts</span>
+                                </div>
+                                <div className="tech-item">
+                                    <span className="tech-icon">🔒</span>
+                                    <span className="tech-name">Blockchain</span>
+                                </div>
+                                <div className="tech-item">
+                                    <span className="tech-icon">💸</span>
+                                    <span className="tech-name">DeFi</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Features Section */}
             <section className="features-section">
                 <div className="container">
@@ -57,9 +120,9 @@ const HomePage: React.FC = () => {
                         <div className="feature-card">
                             <div className="feature-icon">
                                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    <path d="M12 16V12" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    <path d="M12 8H12.01" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M12 16V12" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M12 8H12.01" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </div>
                             <h3 className="feature-title">Secure Payments</h3>
@@ -71,8 +134,8 @@ const HomePage: React.FC = () => {
                         <div className="feature-card">
                             <div className="feature-icon">
                                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M20.59 13.41L13.42 20.58C13.2343 20.766 13.0137 20.9135 12.7709 21.0141C12.5281 21.1148 12.2678 21.1666 12.005 21.1666C11.7422 21.1666 11.4819 21.1148 11.2391 21.0141C10.9963 20.9135 10.7757 20.766 10.59 20.58L2 12V2H12L20.59 10.59C20.9625 10.9647 21.1716 11.4716 21.1716 12C21.1716 12.5284 20.9625 13.0353 20.59 13.41Z" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    <path d="M7 7H7.01" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M20.59 13.41L13.42 20.58C13.2343 20.766 13.0137 20.9135 12.7709 21.0141C12.5281 21.1148 12.2678 21.1666 12.005 21.1666C11.7422 21.1666 11.4819 21.1148 11.2391 21.0141C10.9963 20.9135 10.7757 20.766 10.59 20.58L2 12V2H12L20.59 10.59C20.9625 10.9647 21.1716 11.4716 21.1716 12C21.1716 12.5284 20.9625 13.0353 20.59 13.41Z" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M7 7H7.01" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </div>
                             <h3 className="feature-title">Low Fees</h3>
@@ -84,13 +147,13 @@ const HomePage: React.FC = () => {
                         <div className="feature-card">
                             <div className="feature-icon">
                                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M3 21H21" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    <path d="M5 21V7L13 3V21" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    <path d="M19 21V12L13 8" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    <path d="M9 9V9.01" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    <path d="M9 12V12.01" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    <path d="M9 15V15.01" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    <path d="M9 18V18.01" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M3 21H21" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M5 21V7L13 3V21" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M19 21V12L13 8" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M9 9V9.01" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M9 12V12.01" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M9 15V15.01" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M9 18V18.01" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </div>
                             <h3 className="feature-title">Global Marketplace</h3>
@@ -118,8 +181,8 @@ const HomePage: React.FC = () => {
 
                         <div className="step-arrow">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12H19" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                <path d="M12 5L19 12L12 19" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M5 12H19" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M12 5L19 12L12 19" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </div>
 
@@ -133,8 +196,8 @@ const HomePage: React.FC = () => {
 
                         <div className="step-arrow">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12H19" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                <path d="M12 5L19 12L12 19" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M5 12H19" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M12 5L19 12L12 19" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </div>
 
@@ -148,8 +211,8 @@ const HomePage: React.FC = () => {
 
                         <div className="step-arrow">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12H19" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                <path d="M12 5L19 12L12 19" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M5 12H19" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M12 5L19 12L12 19" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </div>
 
@@ -174,8 +237,8 @@ const HomePage: React.FC = () => {
                             staking rewards, and governance rights
                         </p>
 
-                        <Link to="/tokens" className="btn btn-primary token-btn">
-                            Explore Token Utility
+                        <Link to="/tokens" className="btn btn-modern-token">
+                            <span className="btn-icon">💎</span> Explore Token Utility
                         </Link>
                     </div>
 
@@ -207,11 +270,11 @@ const HomePage: React.FC = () => {
                     </p>
 
                     {connected ? (
-                        <Link to="/marketplace" className="btn btn-primary cta-btn">
-                            Explore Marketplace
+                        <Link to="/marketplace" className="btn btn-modern-primary cta-btn">
+                            <span className="btn-icon">🚀</span> Explore Marketplace
                         </Link>
                     ) : (
-                        <WalletMultiButton className="btn wallet-btn cta-btn" />
+                        <WalletMultiButton className="btn btn-modern-connect cta-btn" />
                     )}
                 </div>
             </section>
