@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="152e3791-0b4b-46fc-ad5d-04c0161dd16e" name="freelchain" url="http://b130127.hostch02.fornex.host">
+        <fileTransfer rootFolder="/public_html/freelchain.com" host="b130127.hostch02.fornex.host" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

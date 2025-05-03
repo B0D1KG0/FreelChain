@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import '../styles/HomePage.css';
+import '../styles/ButtonStyles.css'; // Добавьте этот импорт
 
 const HomePage: React.FC = () => {
     const { connected } = useWallet();
@@ -40,8 +41,7 @@ const HomePage: React.FC = () => {
                             {/* Placeholder for hero image */}
                             <div className="placeholder-image">
                                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill="#34A853" d="M47.7,-61.1C62.3,-51.5,75.2,-37.5,79.8,-21.2C84.4,-4.9,80.6,13.6,71.6,28.5C62.6,43.4,48.3,54.6,32.5,63.5C16.6,72.3,-0.8,78.9,-17.8,76.3C-34.8,73.7,-51.4,62,-64.3,46.2C-77.2,30.4,-86.5,10.4,-84.7,-8.3C-82.9,-27.1,-70.1,-44.5,-54.7,-54.2C-39.3,-63.9,-21.2,-65.9,-3.1,-62.3C15,-58.8,33.1,-70.7,47.7,-61.1Z" transform="translate(100 100)" />
-                                </svg>
+                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#34A853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />                                </svg>
                             </div>
                         </div>
                     </div>

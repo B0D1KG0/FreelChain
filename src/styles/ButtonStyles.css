@@ -1,0 +1,39 @@
+/* Высокоприоритетные стили для кнопок */
+.btn.btn-modern-primary,
+.btn.btn-modern-secondary,
+.btn.btn-modern-connect,
+.btn.btn-modern-token {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 12px 28px !important;
+    border-radius: 50px !important; /* Полукруглая форма */
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    text-transform: none !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.btn.btn-modern-primary {
+    background: linear-gradient(90deg, #3a7bd5, #00d2ff) !important;
+    color: white !important;
+}
+
+.btn.btn-modern-secondary {
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #3a7bd5 !important;
+    border: 2px solid rgba(58, 123, 213, 0.3) !important;
+}
+
+.btn.btn-modern-token {
+    background: white !important;
+    color: #3a7bd5 !important;
+    font-weight: 600 !important;
+    border-radius: 50px !important;
+}
