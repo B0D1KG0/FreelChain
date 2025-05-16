@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 // Initialize session
 session_start();
 
@@ -12,7 +15,12 @@ use Attestto\SolanaPhpSdk\Connection;
 // Check Solana connection
 $solanaConnected = false;
 try {
-    $connection = new Connection($solana_config['devnet']); // Используем devnet из конфигурации
+    // First create the RPC client with the URL
+    $client = new Attestto\SolanaPhpSdk\SolanaRpcClient($solana_config['devnet']);
+
+    // Then create the connection using the client
+    $connection = new Connection($client);
+
     $solanaConnected = true;
 } catch (Exception $e) {
     $solanaError = $e->getMessage();
