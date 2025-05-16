@@ -5,7 +5,7 @@
       <paths name="freel">
         <serverdata>
           <mappings>
-            <mapping deploy="/public_html/freelchain.todoplanner.org" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

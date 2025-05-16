@@ -3,9 +3,9 @@
 // Database configuration
 $db_config = [
     'host' => 'localhost',      // Database host
-    'dbname' => 'chainwork_db', // Database name
-    'username' => 'chainwork_user',  // Database username
-    'password' => '',           // Database password (set this securely)
+    'dbname' => 'b130127_freelchain', // Database name
+    'username' => 'b130127_freelcha',  // Database username
+    'password' => 'j3gpc4yGAz$itOXk',           // Database password (set this securely)
     'charset' => 'utf8mb4',     // Character set
     'options' => [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

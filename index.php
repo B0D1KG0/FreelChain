@@ -12,25 +12,33 @@ use Attestto\SolanaPhpSdk\Connection;
 // Check Solana connection
 $solanaConnected = false;
 try {
-    $connection = new Connection('https://api.mainnet-beta.solana.com');
+    $connection = new Connection($solana_config['devnet']); // Используем devnet из конфигурации
     $solanaConnected = true;
 } catch (Exception $e) {
     $solanaError = $e->getMessage();
 }
 
+// Проверка соединения с базой данных
+$dbConnected = isset($db) && $db instanceof PDO;
+
 // Get latest projects
 $latestProjects = [];
-try {
-    $stmt = $db->prepare("SELECT p.*, u.username as client_name 
-                         FROM projects p 
-                         JOIN users u ON p.client_id = u.id 
-                         WHERE p.status = 'open' 
-                         ORDER BY p.created_at DESC 
-                         LIMIT 6");
-    $stmt->execute();
-    $latestProjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    // Handle error
+if ($dbConnected) {
+    try {
+        // Обновленный запрос с учетом новой структуры таблиц
+        $stmt = $db->prepare("SELECT p.*, u.username as client_name, u.profile_image as client_image,
+                             (SELECT COUNT(*) FROM proposals WHERE project_id = p.id) as proposal_count
+                             FROM projects p 
+                             JOIN users u ON p.client_id = u.id 
+                             WHERE p.status = 'open' 
+                             ORDER BY p.created_at DESC 
+                             LIMIT 6");
+        $stmt->execute();
+        $latestProjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        // Логируем ошибку
+        error_log("Error fetching latest projects: " . $e->getMessage());
+    }
 }
 
 // Get platform statistics
@@ -41,33 +49,57 @@ $stats = [
     'value' => 0
 ];
 
-try {
-    // Count users
-    $stmt = $db->prepare("SELECT COUNT(*) as total FROM users");
-    $stmt->execute();
-    $stats['users'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+if ($dbConnected) {
+    try {
+        // Count users
+        $stmt = $db->prepare("SELECT COUNT(*) as total FROM users");
+        $stmt->execute();
+        $stats['users'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-    // Count projects
-    $stmt = $db->prepare("SELECT COUNT(*) as total FROM projects");
-    $stmt->execute();
-    $stats['projects'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        // Count projects
+        $stmt = $db->prepare("SELECT COUNT(*) as total FROM projects");
+        $stmt->execute();
+        $stats['projects'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-    // Count completed projects
-    $stmt = $db->prepare("SELECT COUNT(*) as total FROM projects WHERE status = 'completed'");
-    $stmt->execute();
-    $stats['completed'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        // Count completed projects
+        $stmt = $db->prepare("SELECT COUNT(*) as total FROM projects WHERE status = 'completed'");
+        $stmt->execute();
+        $stats['completed'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-    // Total transaction value
-    $stmt = $db->prepare("SELECT SUM(amount) as total FROM transactions");
-    $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    $stats['value'] = $result['total'] ?? 0;
-} catch (PDOException $e) {
-    // Handle error
+        // Total transaction value
+        $stmt = $db->prepare("SELECT SUM(amount) as total FROM transactions WHERE status = 'completed'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stats['value'] = $result['total'] ?? 0;
+    } catch (PDOException $e) {
+        // Логируем ошибку
+        error_log("Error fetching statistics: " . $e->getMessage());
+    }
+}
+
+// Get top freelancers
+$topFreelancers = [];
+if ($dbConnected) {
+    try {
+        $stmt = $db->prepare("SELECT u.id, u.username, u.profile_image, u.skills, u.rating, 
+                             COUNT(DISTINCT p.id) as completed_projects 
+                             FROM users u 
+                             LEFT JOIN projects p ON u.id = p.freelancer_id AND p.status = 'completed' 
+                             WHERE u.user_type = 'freelancer' 
+                             GROUP BY u.id 
+                             ORDER BY u.rating DESC, completed_projects DESC 
+                             LIMIT 4");
+        $stmt->execute();
+        $topFreelancers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        // Логируем ошибку
+        error_log("Error fetching top freelancers: " . $e->getMessage());
+    }
 }
 
 // Current date for footer
 $currentDate = date('Y');
+$currentUsername = $_SESSION['username'] ?? 'Guest';
 ?>
 
 <!DOCTYPE html>
@@ -91,7 +123,7 @@ $currentDate = date('Y');
 
         <nav>
             <ul>
-                <li><a href="index.php">Home</a></li>
+                <li><a href="index.php" class="active">Home</a></li>
                 <li><a href="projects.php">Projects</a></li>
                 <li><a href="freelancers.php">Freelancers</a></li>
                 <li><a href="how-it-works.php">How It Works</a></li>
@@ -126,6 +158,10 @@ $currentDate = date('Y');
         <div class="blockchain-status">
             <span class="status-indicator <?php echo $solanaConnected ? 'connected' : 'disconnected'; ?>"></span>
             <?php echo $solanaConnected ? 'Blockchain Connected' : 'Blockchain Status: Connecting...'; ?>
+            <?php if (!$dbConnected): ?>
+                <span class="status-indicator disconnected"></span>
+                <span>Database: Disconnected</span>
+            <?php endif; ?>
         </div>
     </div>
 </section>
@@ -245,12 +281,20 @@ $currentDate = date('Y');
                             <h3><?php echo htmlspecialchars($project['title']); ?></h3>
                             <p class="project-excerpt"><?php echo substr(htmlspecialchars($project['description']), 0, 100) . '...'; ?></p>
                             <div class="project-meta">
-                                    <span class="project-budget">
-                                        <i class="fas fa-coins"></i> $<?php echo htmlspecialchars($project['budget']); ?>
-                                    </span>
+                                <span class="project-budget">
+                                    <i class="fas fa-coins"></i> $<?php echo htmlspecialchars($project['budget']); ?>
+                                </span>
                                 <span class="project-client">
-                                        <i class="fas fa-user"></i> <?php echo htmlspecialchars($project['client_name']); ?>
-                                    </span>
+                                    <i class="fas fa-user"></i> <?php echo htmlspecialchars($project['client_name']); ?>
+                                </span>
+                            </div>
+                            <div class="project-meta">
+                                <span class="project-category">
+                                    <i class="fas fa-tag"></i> <?php echo htmlspecialchars($project['category']); ?>
+                                </span>
+                                <span class="project-proposals">
+                                    <i class="fas fa-paper-plane"></i> <?php echo htmlspecialchars($project['proposal_count'] ?? 0); ?> proposals
+                                </span>
                             </div>
                             <a href="project.php?id=<?php echo $project['id']; ?>" class="btn btn-view">View Details</a>
                         </div>
@@ -268,6 +312,64 @@ $currentDate = date('Y');
         </div>
     </div>
 </section>
+
+<!-- Top Freelancers -->
+<?php if(count($topFreelancers) > 0): ?>
+    <section class="freelancers">
+        <div class="container">
+            <div class="section-title">
+                <h2>Top Freelancers</h2>
+                <p>Meet our highest-rated professionals</p>
+            </div>
+
+            <div class="freelancers-grid">
+                <?php foreach($topFreelancers as $freelancer): ?>
+                    <div class="freelancer-card">
+                        <div class="freelancer-profile">
+                            <div class="freelancer-image">
+                                <?php if($freelancer['profile_image']): ?>
+                                    <img src="<?php echo htmlspecialchars($freelancer['profile_image']); ?>" alt="<?php echo htmlspecialchars($freelancer['username']); ?>">
+                                <?php else: ?>
+                                    <div class="profile-placeholder">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <h3><?php echo htmlspecialchars($freelancer['username']); ?></h3>
+                            <div class="freelancer-rating">
+                                <?php
+                                $rating = round($freelancer['rating']);
+                                for ($i = 1; $i <= 5; $i++) {
+                                    if ($i <= $rating) {
+                                        echo '<i class="fas fa-star"></i>';
+                                    } else {
+                                        echo '<i class="far fa-star"></i>';
+                                    }
+                                }
+                                ?>
+                                <span>(<?php echo number_format($freelancer['rating'], 1); ?>)</span>
+                            </div>
+                            <p class="freelancer-skills">
+                                <?php
+                                $skills = $freelancer['skills'] ? explode(',', $freelancer['skills']) : [];
+                                $displaySkills = array_slice($skills, 0, 3);
+                                echo htmlspecialchars(implode(', ', $displaySkills));
+                                if (count($skills) > 3) echo '...';
+                                ?>
+                            </p>
+                            <p class="freelancer-projects"><?php echo $freelancer['completed_projects']; ?> completed projects</p>
+                            <a href="freelancer-profile.php?id=<?php echo $freelancer['id']; ?>" class="btn btn-view">View Profile</a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="view-all-container">
+                <a href="freelancers.php" class="btn btn-view-all">View All Freelancers</a>
+            </div>
+        </div>
+    </section>
+<?php endif; ?>
 
 <!-- How It Works -->
 <section class="how-it-works">
@@ -357,54 +459,53 @@ $currentDate = date('Y');
             <div class="footer-col">
                 <h3>For Clients</h3>
                 <ul>
-                    <li><a href="#">Post a Project</a></li>
-                    <li><a href="#">Find Freelancers</a></li>
-                    <li><a href="#">Payment Methods</a></li>
-                    <li><a href="#">Client FAQs</a></li>
+                    <li><a href="post-project.php">Post a Project</a></li>
+                    <li><a href="freelancers.php">Find Freelancers</a></li>
+                    <li><a href="payment-methods.php">Payment Methods</a></li>
+                    <li><a href="faq.php?type=client">Client FAQs</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h3>For Freelancers</h3>
                 <ul>
-                    <li><a href="#">Find Work</a></li>
-                    <li><a href="#">Create Profile</a></li>
-                    <li><a href="#">Getting Paid</a></li>
-                    <li><a href="#">Freelancer FAQs</a></li>
+                    <li><a href="projects.php">Find Work</a></li>
+                    <li><a href="profile.php">Create Profile</a></li>
+                    <li><a href="getting-paid.php">Getting Paid</a></li>
+                    <li><a href="faq.php?type=freelancer">Freelancer FAQs</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h3>Resources</h3>
                 <ul>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Documentation</a></li>
-                    <li><a href="#">API</a></li>
-                    <li><a href="#">Blockchain Explorer</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h3>Legal</h3>
-                <ul>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Cookie Policy</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="blog.php">Blog</a></li>
+                    <li><a href="documentation.php">Documentation</a></li>
+                    <li><a href="api.php">API</a></li>
+                    <li><a href="blockchain-explorer.php">Blockchain Explorer</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; <?php echo $currentDate; ?> ChainWork. All rights reserved.</p>
-            <p>Current blockchain status:
-                <span class="blockchain-status-indicator <?php echo $solanaConnected ? 'online' : 'offline'; ?>"></span>
-                <?php echo $solanaConnected ? 'Connected' : 'Connecting...'; ?>
+            <p>© <?php echo $currentDate; ?> ChainWork. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="terms.php">Terms of Service</a>
+                <a href="privacy.php">Privacy Policy</a>
+                <a href="contact.php">Contact Us</a>
+            </div>
+            <p class="system-info">
+                <small>Current user: <?php echo htmlspecialchars($currentUsername); ?> |
+                    DB Status: <?php echo $dbConnected ? 'Connected' : 'Disconnected'; ?> |
+                    Blockchain: <?php echo $solanaConnected ? 'Connected' : 'Disconnected'; ?> |
+                    Time: <?php echo date('Y-m-d H:i:s'); ?></small>
             </p>
         </div>
     </div>
 </footer>
 
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>
